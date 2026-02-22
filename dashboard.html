@@ -1,0 +1,85 @@
+<div class="topbar">
+  <div class="logo">KANBAN FLOW</div>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<div class="add-column">
+  <button (click)="openModal()" class="add-task-btn">
+    + Add Task
+  </button>
+
+  <button (click)="openColumnModal()" class="add-column-btn">
+    + Add Column
+  </button>
+</div>
+
+<div class="board">
+  <div class="column" *ngFor="let column of columns">
+
+    <h2 class="column-title">{{ column }}</h2>
+
+    <div *ngFor="let task of tasks">
+      <div *ngIf="task.status === column" class="task-card">
+
+        <h4>{{ task.title }}</h4>
+        <p>{{ task.description }}</p>
+        <small>{{ task.priority }}</small>
+        <br>
+        <small>{{ task.date }}</small>
+
+        <div class="buttons">
+          <button (click)="editTask(task)">Edit</button>
+          <button (click)="deleteTask(task.id)">Delete</button>
+        </div>
+
+      </div>
+    </div>
+
+   <div class="delete-column-wrapper" *ngIf="isCustomColumn(column)">
+  <button (click)="deleteColumn(column)">
+    Delete Column
+  </button>
+</div>
+
+  </div>
+</div>
+
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>{{ isEditing ? 'Edit Task' : 'Add Task' }}</h3>
+
+    <input [(ngModel)]="newTask.title" placeholder="Title">
+    <input [(ngModel)]="newTask.description" placeholder="Description">
+    <input type="date" [(ngModel)]="newTask.date">
+
+    <select [(ngModel)]="newTask.priority">
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <select [(ngModel)]="newTask.status">
+      <option *ngFor="let column of columns" [value]="column">
+        {{ column }}
+      </option>
+    </select>
+
+    <div class="modal-buttons">
+      <button (click)="saveTask()">Save</button>
+      <button (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" *ngIf="showColumnModal">
+  <div class="modal-content">
+    <h3>Add Column</h3>
+
+    <input [(ngModel)]="newColumnName" placeholder="New Column Name">
+
+    <div class="modal-buttons">
+      <button (click)="saveColumn()">Save</button>
+      <button (click)="closeColumnModal()">Cancel</button>
+    </div>
+  </div>
+</div>
